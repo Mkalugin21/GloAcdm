@@ -1,5 +1,11 @@
 <?php
 include "includes/functions.php";
+
+$users_count = db_query("SELECT COUNT(id) FROM `users`;") -> fetchColumn();
+
+$linksViews_count = db_query("SELECT SUM(views) FROM `links`;") -> fetchColumn();
+
+$links_count = db_query("SELECT COUNT(id) FROM `links`;") -> fetchColumn();;
 ?>
 
 <!doctype html>
@@ -10,7 +16,7 @@ include "includes/functions.php";
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-uWxY/CJNBR+1zjPWmfnSnVxwRheevXITnMqoEIeG1LJrdI0GlVs/9cVSyPYXdcSF" crossorigin="anonymous">
-    <title><?php echo SITE_NAME; ?></title>
+    <title><?php echo SITE_NAME;?></title>
 </head>
 <body>
 <header>
@@ -37,8 +43,7 @@ include "includes/functions.php";
 </header>
 
 
-   <?php echo get_url(); ?>
 
 
 
-<pre></pre>
+
