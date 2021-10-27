@@ -1,6 +1,5 @@
-<?php include "includes/header.php";?>
+<?php include "includes/header.php";
 
-<?php
 if (isset($_GET['url']) && !empty($_GET['url'])) {
     $url = strtolower(trim($_GET['url']));
     $link = db_query("SELECT * FROM `links` WHERE `short_link`= '$url';")->fetch();
