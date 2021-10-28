@@ -54,16 +54,63 @@ function update_views($url) {
     return db_query("UPDATE `links` SET `views` = `views` + 1 WHERE `short_link`= '$url'", true);
 }
 
+function add_user($login, $pass) {
+    $password = password_hash($pass, PASSWORD_DEFAULT);
+
+    return db_query("INSERT INTO `users` (`id`, `login`, `password`) VALUES (NULL, '$login', '$password');", true);
+}
+
 function register_user($auth_data) {
-    if (empty($auth_data) || isset($auth_data['login']) || empty($auth_data['login']) || isset($auth_data['pass']) || isset($auth_data['pass2'])) return false;
+    if (empty($auth_data) || !isset($auth_data['login']) || empty($auth_data['login']) || !isset($auth_data['pass']) || !isset($auth_data['pass2'])) return false;
 
     $user = get_user_info($auth_data['login']);
     if (!empty($user)) {
+        $_SESSION['error'] = "Пользователь '" . $auth_data['login'] . "'уже существует";
         header('Location: register.php');
         die;
     }
 
+    if ($auth_data['pass'] !== $auth_data['pass2']) {
+        $_SESSION['error'] = "Пароли не совпадают!";
+        header('Location: register.php');
+        die;
+    }
+
+    if(add_user($auth_data['login'], $auth_data['pass'])) {
+        $_SESSION['success'] = "Вы успешно зарегистрированы!";
+        header('Location: login.php');
+        die;
+    }
+
     return true;
+}
+
+function login($auth_data)
+{
+    if (empty($auth_data) || !isset($auth_data['login']) || empty($auth_data['login']) || !isset($auth_data['pass']) || empty($auth_data['pass'])) {
+        $_SESSION['error'] = "Логин или пароль не может быть пустым";
+        header('Location: login.php');
+        die;
+    }
+
+    $user = get_user_info($auth_data['login']);
+    if (empty($user)) {
+        $_SESSION['error'] = "Логин или пароль не совпадают!";
+        header('Location: login.php');
+        die;
+    }
+
+    if (password_verify($auth_data['pass'], $user['pass'])) {
+        $_SESSION['user'] = $user;
+
+        header('Location: profile.php');
+        die;
+    } else {
+        $_SESSION['error'] = "Пароль неверен!";
+        header('Location: login.php');
+        die;
+    }
+
 }
 
 

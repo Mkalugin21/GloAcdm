@@ -14,7 +14,7 @@ if (isset($_GET['url']) && !empty($_GET['url'])) {
     die;
 }
 
-include "includes/header.php";
+include_once "includes/header.php";
 
 ?>
 
